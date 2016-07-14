@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://fb.me/react-with-addons-15.2.0.js"></script>
+  <script src="https://fb.me/react-dom-15.2.0.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+</head>
+<body>
+
+<h1>Example</h1>
+
+<div id="app"></div>
+
+<script type="text/babel">
+
+  const names = ['Miško', 'Ferko', 'Jožko']
+
+  const Person = function(props) {
+    return <li>
+      {props.name} <button onClick={props.onDelete}>x</button>
+    </li>
+  }
+
+
+  const Team = React.createClass({
+
+    getInitialState: function() {
+      return {
+        names: this.props.names
+      }
+    },
+
+    addCccToState: function() {
+      const newNames = this.state.names
+      newNames.push('Ccc')
+      this.setState({
+        names: newNames
+      })
+    },
+
+    handleOnDelete: function(index) {
+
+      /*
+      this.setState({
+        names: this.state.names.filter((value, i) => i != index)
+      })
+      */
+      this.setState({
+        names: this.state.names.filter( function (name, i) {
+          return i != index
+        })
+      })
+
+    },
+
+    render: function() {
+      return <div>
+        <ul>
+          {this.state.names.map((name, index) =>
+            <Person key={index} name={name} onDelete={()=>this.handleOnDelete(index)}/>
+          )}
+          <hr/>
+          <button onClick={this.addCccToState}>
+            +
+          </button>
+        </ul>
+      </div>
+    }
+  })
+
+  const App = <div>
+    <Team names={names}/>
+  </div>
+
+  ReactDOM.render(App, document.getElementById('app'))
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://fb.me/react-with-addons-15.2.0.js"></script>
+  <script src="https://fb.me/react-dom-15.2.0.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+</head>
+<body>
+
+<h1>Example 3</h1>
+
+<div id="app"></div>
+
+<script type="text/babel">
+
+  const Input = React.createClass({
+
+    getInitialState: function() {
+      return {value: this.props.value}
+    },
+
+    setValue(event) {
+      this.setState({value: event.target.value})
+    },
+
+    render() {
+      return <input type="text" name={this.props.name} value={this.state.value} onChange={this.setValue}/>
+    },
+  })
+
+
+  const Account = ({account, onDelete, zobrazitPoznamku}) => <div>
+    číslo účtu <Input name="ucetCislo" value={account.cisloUctu}/><br/>
+    banka: <Input name="ucetBanka" value={account.banka}/><br/>
+    {zobrazitPoznamku && <div>
+      poznámka: <Input name="ucetPoznamka" value={account.poznamka}/><br/>
+    </div>}
+    <button onClick={(e)=>{e.preventDefault();onDelete()}}>X</button><br/>
+    <hr/>
+  </div>
+
+
+  const Accounts = React.createClass({
+
+    getInitialState: function() {
+      return {
+        accounts: []
+      }
+    },
+
+    addAccount: function() {
+      this.setState({
+        accounts: [...this.state.accounts, {cisloUctu:'', banka:'', poznamka:'', id: Math.random()}]
+      })
+    },
+
+    deleteAccount: function(index) {
+      this.setState({
+        accounts: this.state.accounts.filter((value, i) => i != index)
+      })
+    },
+
+    render: function() {
+      return <div>
+        {this.state.accounts.map((account, index) =>
+          <Account key={account.id}
+                   account={account}
+                   onDelete={()=>this.deleteAccount(index)}
+                   zobrazitPoznamku={this.props.zobrazitPoznamku}
+          />
+        )}
+        <button onClick={(e)=>{e.preventDefault(); this.addAccount()}}>
+          + pridaj účet
+        </button>
+      </div>
+    }
+  })
+
+
+  const TabTitle = ({title, onClick, isActive}) => {
+    const defaultStyle = {textDecoration: 'underline'}
+    const activeStyle = {fontWeight: 'bold', textDecoration: 'none', color: 'black'}
+    return <span>
+      <a href="#" onClick={onClick} style={isActive ? activeStyle : defaultStyle}>
+        {title}
+      </a>
+      {' '} | {' '}
+    </span>
+  }
+
+
+  const TabBody = ({isActive, children}) => {
+    const defaultStyle = {display: 'none'}
+    const activeStyle = {}
+    return <div style={isActive ? activeStyle : defaultStyle}>
+      {children}
+    </div>
+  }
+
+
+  const Tabs = React.createClass({
+
+    getInitialState() {
+      return {
+        activeTabIndex: 0,
+      }
+    },
+
+    activateTab(index) {
+      this.setState({
+        activeTabIndex: index,
+      })
+    },
+
+    render() {
+      return <div>
+
+        {this.props.tabs.map((tab, index) =>
+          <TabTitle key={index}
+                    title={tab.title}
+                    onClick={()=>this.activateTab(index)}
+                    isActive={index === this.state.activeTabIndex}
+          />
+        )}
+
+        <br/>
+        <br/>
+
+        {this.props.tabs.map((tab, index) =>
+          <TabBody key={index} isActive={index === this.state.activeTabIndex}>
+            {tab.body}
+          </TabBody>
+        )}
+
+      </div>
+    },
+  })
+
+
+  const App = React.createClass({
+
+    getInitialState() {
+      return {
+        zobrazitPoznamku: false
+      }
+    },
+
+    prepnutZobrazitPoznamku() {
+      this.setState({
+        zobrazitPoznamku: !this.state.zobrazitPoznamku
+      })
+    },
+
+    handleSubmit(e) {
+      e.preventDefault()
+      console.log("submitted: ", $("form").serializeArray())
+    },
+
+    render() {
+
+      const TabZaklad = <div>
+        názov partnera: <Input name="nazovPartnera" value=""/><br/>
+      </div>
+
+      /*const TabAdresa = <div>
+        ulica: <Input name="ulica" value=""/><br/>
+        mesto: <Input name="mesto" value=""/><br/>
+      </div>*/
+
+
+      const adresaTabs = [
+        {
+          title: 'Fakturačná adresa',
+          body: <div>
+                  ulica fakturačná: <Input name="ulica1" value=""/><br/>
+                  mesto fakturačné: <Input name="mesto1" value=""/><br/>
+                </div>
+        },
+        {
+          title: 'Poštová adresa',
+          body: <div>
+                  ulica poštová: <Input name="ulica2" value=""/><br/>
+                  mesto poštové: <Input name="mesto2" value=""/><br/>
+                </div>
+        },
+      ]
+      const TabAdresa = <div>
+        <Tabs tabs={adresaTabs}/>
+      </div>
+
+      const TabUcty = <div>
+        <label>
+          <input type="checkbox" checked={this.state.zobrazitPoznamku} onChange={this.prepnutZobrazitPoznamku}/>
+          zobraziť poznámku
+        </label>
+        <hr/>
+        <Accounts zobrazitPoznamku={this.state.zobrazitPoznamku}/>
+      </div>
+
+      const tabs = [
+        {
+          title: 'Základ',
+          body: TabZaklad,
+        },
+        {
+          title: 'Adresa',
+          body: TabAdresa,
+        },
+        {
+          title: 'Učty',
+          body: TabUcty,
+        },
+      ]
+
+      return <form>
+        <Tabs tabs={tabs}/>
+        <br/>
+        <button onClick={this.handleSubmit}>SAVE</button>
+      </form>
+    }
+  })
+
+    /*
+    <MyForm>
+
+      <Tab title="Zaklad">
+        <input/>
+        <input/>
+        <input/>
+      </Tab>
+
+      <Tab title="Adresa">
+        <input/>
+        <input/>
+        <input/>
+      </Tab>
+
+      <Tab title="Ucty">
+        <input/>
+        <input/>
+        <input/>
+      </Tab>
+
+    </MyForm>
+    */
+
+  ReactDOM.render(<App/>, document.getElementById('app'))
+
+</script>
+
+</body>
+</html>

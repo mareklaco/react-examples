@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="https://fb.me/react-with-addons-15.2.0.js"></script>
+	<script src="https://fb.me/react-dom-15.2.0.js"></script>
+</head>
+<body>
+
+<h1>Example</h1>
+
+<div id="app"></div>
+
+<script>
+
+	var LI1 = React.createElement("li", {'key': 1}, "Miško")
+	var LI2 = React.createElement("li", {'key': 2}, "Ferko")
+	var LI3 = React.createElement("li", {'key': 3}, "Jožko")
+
+	var UL = React.createElement("ul", null, [LI1, LI2, LI3])
+	var App = React.createElement("div", null, UL)
+
+	ReactDOM.render(App, document.getElementById('app'))
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script>
+    $(function () {
+
+      $(".tab-titles > a").on("click", function() {
+        $(this).addClass("active").siblings().removeClass("active")
+        $(".tab").hide()
+        $( $(this).attr("href") ).show()
+      })
+
+      $("form").on("submit", function (e) {
+        e.preventDefault()
+        console.log("submitted: ", $("form").serializeArray())
+      })
+
+      $("#addAccount").on("click", function (e) {
+        e.preventDefault()
+        $("#accounts").append( $("#accountTpl").clone(true).removeAttr("id") )
+      })
+
+      $(".removeAccount").on("click", function (e) {
+        e.preventDefault()
+        $(this).closest(".account").remove()
+      })
+
+    })
+  </script>
+
+  <style>
+    .tab-titles > a.active {
+      font-weight: bold;
+      text-decoration: none;
+      color: inherit;
+    }
+    .tab:not(.active) {
+      display: none;
+    }
+
+    #accountTpl {
+      display: none;
+    }
+  </style>
+
+</head>
+<body>
+
+<h1>Example 2</h1>
+
+<form>
+
+  <div class="tab-titles">
+    <a href="#tab1" class="active">Základ</a>
+    |
+    <a href="#tab2">Adresa</a>
+    |
+    <a href="#tab3">Účty</a>
+  </div>
+
+  <br/>
+
+  <div id="tab1" class="tab active">
+      názov partnera: <input type="text" name="nazovPartnera" value=""><br/>
+  </div>
+
+  <div id="tab2" class="tab">
+      ulica: <input type="text" name="ulica" value=""><br/>
+      mesto: <input type="text" name="mesto" value=""><br/>
+  </div>
+
+  <div id="tab3" class="tab">
+      <div id="accounts"></div>
+      <button id="addAccount">+ pridaj účet</button>
+  </div>
+
+
+  <br/>
+  <input type="submit" value="SAVE">
+
+</form>
+
+
+<div id="accountTpl" class="account">
+  číslo účtu <input type="text" name="ucetCislo[]" value=""><br/>
+  banka: <input type="text" name="ucetBanka[]" value=""><br/>
+  <button class="removeAccount">X</button><br/>
+  <br/>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="https://fb.me/react-with-addons-15.2.0.js"></script>
+	<script src="https://fb.me/react-dom-15.2.0.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+</head>
+<body>
+
+<h1>Example</h1>
+
+<div id="app"></div>
+
+<script type="text/babel">
+
+	const names = ['Miško', 'Ferko', 'Jožko']
+
+	/*
+	const Person = React.createClass({
+		render: function () {
+			return <li>
+				{this.props.name}
+				 <button>x</button>
+			</li>;
+		}
+	});
+
+  const Person = React.createClass({
+		render() {
+			return <li>
+				{this.props.name}
+			</li>;
+		}
+	});
+
+	class Person extends React.Component {
+		render() {
+			return <li>
+				{this.props.name}
+				 <button>x</button>
+			</li>
+		}
+	}
+
+	const Person = ({name}) => (
+			<li>
+				{name} <button>x</button>
+			</li>
+	)
+
+	*/
+
+	const Person = function(props) {
+    return <li>
+      {props.name}
+      <button>x</button>
+    </li>
+  }
+
+	const App = <ul>
+		{names.map((name, index) =>
+			<Person key={index} name={name}/>
+		)}
+	</ul>
+
+	ReactDOM.render(App, document.getElementById('app'))
+
+</script>
+
+</body>
+</html>
